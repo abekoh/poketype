@@ -1,7 +1,6 @@
-import Distribution.Parsec (Position (Position))
-import System.Console.Terminfo (TermStr)
-
 {-# OPTIONS -Wall -Werror #-}
+
+import Data.List
 
 data PokeType
   = None
@@ -23,7 +22,7 @@ data PokeType
   | Dark
   | Steel
   | Fairy
-  deriving (Show, Enum, Bounded)
+  deriving (Eq, Show, Enum, Bounded)
 
 allValues :: (Bounded a, Enum a) => [a]
 allValues = [minBound ..]
@@ -42,10 +41,40 @@ data Result
 
 data Pokemon = Pokemon {type1 :: PokeType, type2 :: PokeType} deriving (Show)
 
-class PokeTypeChart a where
+class ShowChartIcon a where
+  showChartIcon :: a -> String
+
+instance ShowChartIcon Result where
+  showChartIcon Twice = " ◎ "
+  showChartIcon Half = " △ "
+  showChartIcon Zero = " ✕ "
+  showChartIcon _ = "   "
+
+instance ShowChartIcon PokeType where
+  showChartIcon Normal = "NOR"
+  showChartIcon Fire = "FIR"
+  showChartIcon Water = "WAT"
+  showChartIcon Electric = "ELE"
+  showChartIcon Grass = "GRA"
+  showChartIcon Ice = "ICE"
+  showChartIcon Fighting = "FIG"
+  showChartIcon Poison = "POI"
+  showChartIcon Ground = "GRO"
+  showChartIcon Flying = "FLY"
+  showChartIcon Psychic = "PSY"
+  showChartIcon Bug = "BUG"
+  showChartIcon Rock = "ROC"
+  showChartIcon Ghost = "GHO"
+  showChartIcon Dragon = "DRA"
+  showChartIcon Dark = "DAR"
+  showChartIcon Steel = "STE"
+  showChartIcon Fairy = "FAI"
+  showChartIcon _ = ""
+
+class Capatibility a where
   useMove :: a -> a -> Result
 
-instance PokeTypeChart PokeType where
+instance Capatibility PokeType where
   useMove Normal Rock = Half
   useMove Normal Ghost = Zero
   useMove Normal Steel = Half
@@ -183,7 +212,13 @@ multiplyResult r1 r2 = multiplyResult r2 r1
 attack :: PokeType -> Pokemon -> Result
 attack pokeType (Pokemon t1 t2) = multiplyResult (useMove pokeType t1) (useMove pokeType t2)
 
--- generateTypeChart :: String
+generateTypeChart :: String
+generateTypeChart =
+  let types = filter (/= None) allPokeTypes
+      effectResults = map (\x -> (x, map (useMove x) types)) types
+      header = "    " ++ unwords (map showChartIcon types) ++ "\n"
+      content = intercalate "" (map (\x -> showChartIcon (fst x) ++ " " ++ unwords (map showChartIcon (snd x)) ++ "\n") effectResults)
+   in header ++ content
 
 main :: IO ()
 main = do
@@ -198,3 +233,6 @@ main = do
   print $ attack Poison (Pokemon Fairy Ghost)
   print $ attack Steel (Pokemon Fairy Ghost)
   print allPokeTypes
+  putStrLn generateTypeChart
+
+-- print generateTypeChart
