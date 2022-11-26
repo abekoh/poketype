@@ -1,8 +1,22 @@
 {-# OPTIONS -Wall -Werror #-}
 
-data PokeType = None | Normal | Fire | Water | Grass deriving (Show)
+data PokeType
+  = None
+  | Normal
+  | Fire
+  | Water
+  | Electric
+  | Grass
+  deriving (Show)
 
-data Result = SuperSuperEffective | SuperEffective | Effective | NotVeryEffective | LittleEffective | NoEffect deriving (Show)
+data Result
+  = SuperSuperEffective
+  | SuperEffective
+  | Effective
+  | NotVeryEffective
+  | LittleEffective
+  | NoEffect
+  deriving (Show)
 
 data Pokemon = Pokemon {type1 :: PokeType, type2 :: PokeType} deriving (Show)
 
