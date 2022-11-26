@@ -7,6 +7,19 @@ data PokeType
   | Water
   | Electric
   | Grass
+  | Ice
+  | Fighting
+  | Poison
+  | Ground
+  | Flying
+  | Psychic
+  | Bug
+  | Rock
+  | Ghost
+  | Dragon
+  | Dark
+  | Steel
+  | Fairy
   deriving (Show)
 
 data Result
