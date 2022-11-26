@@ -28,7 +28,7 @@ allValues :: (Bounded a, Enum a) => [a]
 allValues = [minBound ..]
 
 allPokeTypes :: [PokeType]
-allPokeTypes = allValues
+allPokeTypes = filter (/= None) allValues
 
 data Result
   = Quadruple
@@ -214,9 +214,8 @@ attack pokeType (Pokemon t1 t2) = multiplyResult (useMove pokeType t1) (useMove 
 
 generateTypeChart :: String
 generateTypeChart =
-  let types = filter (/= None) allPokeTypes
-      effectResults = map (\x -> (x, map (useMove x) types)) types
-      header = "    " ++ unwords (map showChartIcon types) ++ "\n"
+  let effectResults = map (\x -> (x, map (useMove x) allPokeTypes)) allPokeTypes
+      header = "    " ++ unwords (map showChartIcon allPokeTypes) ++ "\n"
       content = intercalate "" (map (\x -> showChartIcon (fst x) ++ " " ++ unwords (map showChartIcon (snd x)) ++ "\n") effectResults)
    in header ++ content
 
