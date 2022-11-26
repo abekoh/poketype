@@ -10,12 +10,12 @@ data PokeType
   deriving (Show)
 
 data Result
-  = SuperSuperEffective
-  | SuperEffective
-  | Effective
-  | NotVeryEffective
-  | LittleEffective
-  | NoEffect
+  = Quadruple
+  | Twice
+  | Same
+  | Half
+  | Quater
+  | Zero
   deriving (Show)
 
 data Pokemon = Pokemon {type1 :: PokeType, type2 :: PokeType} deriving (Show)
@@ -24,27 +24,27 @@ class PokeTypeChart a where
   useMove :: a -> a -> Result
 
 instance PokeTypeChart PokeType where
-  useMove Fire Fire = NotVeryEffective
-  useMove Fire Water = NotVeryEffective
-  useMove Fire Grass = SuperEffective
-  useMove Water Fire = SuperEffective
-  useMove Water Water = NotVeryEffective
-  useMove Water Grass = NotVeryEffective
-  useMove Grass Fire = NotVeryEffective
-  useMove Grass Water = SuperEffective
-  useMove Grass Grass = NotVeryEffective
-  useMove _ _ = Effective
+  useMove Fire Fire = Half
+  useMove Fire Water = Half
+  useMove Fire Grass = Twice
+  useMove Water Fire = Twice
+  useMove Water Water = Half
+  useMove Water Grass = Half
+  useMove Grass Fire = Half
+  useMove Grass Water = Twice
+  useMove Grass Grass = Half
+  useMove _ _ = Same
 
 multiplyResult :: Result -> Result -> Result
-multiplyResult NoEffect _ = NoEffect
-multiplyResult SuperSuperEffective _ = SuperSuperEffective -- maybe not used
-multiplyResult LittleEffective _ = LittleEffective -- maybe not used
-multiplyResult SuperEffective SuperEffective = SuperSuperEffective
-multiplyResult SuperEffective Effective = SuperEffective
-multiplyResult SuperEffective NotVeryEffective = Effective
-multiplyResult Effective Effective = Effective
-multiplyResult Effective NotVeryEffective = NotVeryEffective
-multiplyResult NotVeryEffective NotVeryEffective = LittleEffective
+multiplyResult Zero _ = Zero
+multiplyResult Quadruple _ = Twice -- maybe not used
+multiplyResult Quater _ = Quater -- maybe not used
+multiplyResult Twice Twice = Quadruple
+multiplyResult Twice Same = Twice
+multiplyResult Twice Half = Same
+multiplyResult Same Same = Same
+multiplyResult Same Half = Half
+multiplyResult Half Half = Quater
 multiplyResult r1 r2 = multiplyResult r2 r1
 
 attack :: PokeType -> Pokemon -> Result
@@ -54,6 +54,6 @@ main :: IO ()
 main = do
   print $ useMove Normal Fire
   print $ useMove Grass Water
-  print $ multiplyResult SuperEffective NotVeryEffective
-  print $ multiplyResult Effective NoEffect
+  print $ multiplyResult Twice Half
+  print $ multiplyResult Same Zero
   print $ attack Fire (Pokemon Fire None)
