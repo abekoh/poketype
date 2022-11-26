@@ -37,7 +37,7 @@ data Result
   | Half
   | Quater
   | Zero
-  deriving (Show)
+  deriving (Eq, Show, Enum, Bounded)
 
 data Pokemon = Pokemon {type1 :: PokeType, type2 :: PokeType} deriving (Show)
 
@@ -219,6 +219,27 @@ generateTypeChart =
       content = intercalate "" (map (\x -> showChartIcon (fst x) ++ " " ++ unwords (map showChartIcon (snd x)) ++ "\n") effectResults)
    in header ++ content
 
+filterWeaknessLine :: Result -> [(PokeType, Result)] -> String
+filterWeaknessLine target ls =
+  unwords (map (show . fst) (filter (\x -> snd x == target) ls))
+
+generateWeaknessList :: Pokemon -> String
+generateWeaknessList p =
+  let results = map (\x -> (x, attack x p)) allPokeTypes
+      quadruple = filterWeaknessLine Quadruple results
+      twice = filterWeaknessLine Twice results
+      half = filterWeaknessLine Half results
+      quater = filterWeaknessLine Quater results
+   in "  x4: "
+        ++ quadruple
+        ++ "\n  x2: "
+        ++ twice
+        ++ "\nx1/2: "
+        ++ half
+        ++ "\nx1/4: "
+        ++ quater
+        ++ "\n"
+
 main :: IO ()
 main = do
   print $ useMove Normal Fire
@@ -233,5 +254,5 @@ main = do
   print $ attack Steel (Pokemon Fairy Ghost)
   print allPokeTypes
   putStrLn generateTypeChart
-
--- print generateTypeChart
+  putStrLn $ generateWeaknessList (Pokemon Fairy Ghost)
+  putStrLn $ generateWeaknessList (Pokemon Grass Dark)
