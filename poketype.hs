@@ -23,7 +23,13 @@ data PokeType
   | Dark
   | Steel
   | Fairy
-  deriving (Show)
+  deriving (Show, Enum, Bounded)
+
+allValues :: (Bounded a, Enum a) => [a]
+allValues = [minBound ..]
+
+allPokeTypes :: [PokeType]
+allPokeTypes = allValues
 
 data Result
   = Quadruple
@@ -177,6 +183,8 @@ multiplyResult r1 r2 = multiplyResult r2 r1
 attack :: PokeType -> Pokemon -> Result
 attack pokeType (Pokemon t1 t2) = multiplyResult (useMove pokeType t1) (useMove pokeType t2)
 
+-- generateTypeChart :: String
+
 main :: IO ()
 main = do
   print $ useMove Normal Fire
@@ -189,3 +197,4 @@ main = do
   print $ attack Normal (Pokemon Fairy Ghost)
   print $ attack Poison (Pokemon Fairy Ghost)
   print $ attack Steel (Pokemon Fairy Ghost)
+  print allPokeTypes
