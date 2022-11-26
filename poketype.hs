@@ -1,4 +1,4 @@
-import Distribution.Parsec (Position)
+import Distribution.Parsec (Position (Position))
 import System.Console.Terminfo (TermStr)
 
 {-# OPTIONS -Wall -Werror #-}
@@ -184,3 +184,8 @@ main = do
   print $ multiplyResult Twice Half
   print $ multiplyResult Same Zero
   print $ attack Fire (Pokemon Fire None)
+  print $ attack Electric (Pokemon Flying Water)
+  print $ attack Dragon (Pokemon Fairy Ghost)
+  print $ attack Normal (Pokemon Fairy Ghost)
+  print $ attack Poison (Pokemon Fairy Ghost)
+  print $ attack Steel (Pokemon Fairy Ghost)
