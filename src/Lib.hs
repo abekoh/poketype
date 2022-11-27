@@ -298,6 +298,3 @@ generateWeaknessList input =
     2 -> generatePokemonWeaknessList (Pokemon t1 t2)
     1 -> generatePokemonWeaknessList (Pokemon t1 None)
     _ -> ""
-  -- in case length wrds of
-  --   2 -> generatePokemonWeaknessList (Pokemon t1 t2)
-  --   _ -> ""

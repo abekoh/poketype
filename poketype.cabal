@@ -37,7 +37,7 @@ library
     , split
   default-language: Haskell2010
 
-executable poketype-exe
+executable poketype
   main-is: Main.hs
   other-modules:
       Paths_poketype
