@@ -6,10 +6,15 @@ import Control.Monad
 import Data.Semigroup ()
 
 showChart :: IO ()
-showChart = putStrLn generateTypeChart
+showChart = putStr generateTypeChart
+
+showWeakness :: String -> IO()
+showWeakness = putStr . generateWeaknessList
 
 opts :: Parser (IO ())
-opts = subparser ( command "chart" (info (pure showChart) idm) )
+opts = subparser ( command "chart" (info (pure showChart) idm)
+  <> command "weakness" (info (showWeakness <$> argument str idm) idm)
+  )
 
 main :: IO ()
 main = join $ execParser (info opts idm)

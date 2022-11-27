@@ -2,11 +2,14 @@ module Lib
     ( generateTypeChart,
       generateWeaknessList,
       Pokemon(..),
-      PokeType(..)
+      PokeType(..),
+      parsePokeType
     ) where
 
 
-import qualified Data.List as List
+import Data.Char
+import Data.List(intercalate)
+import Data.List.Split
 
 data PokeType
   = None
@@ -222,15 +225,15 @@ generateTypeChart :: String
 generateTypeChart =
   let effectResults = map (\x -> (x, map (useMove x) allPokeTypes)) allPokeTypes
       header = "    " ++ unwords (map showChartIcon allPokeTypes) ++ "\n"
-      content = List.intercalate "" (map (\x -> showChartIcon (fst x) ++ " " ++ unwords (map showChartIcon (snd x)) ++ "\n") effectResults)
+      content = intercalate "" (map (\x -> showChartIcon (fst x) ++ " " ++ unwords (map showChartIcon (snd x)) ++ "\n") effectResults)
    in header ++ content
 
 filterWeaknessLine :: Result -> [(PokeType, Result)] -> String
 filterWeaknessLine target ls =
   unwords (map (show . fst) (filter (\x -> snd x == target) ls))
 
-generateWeaknessList :: Pokemon -> String
-generateWeaknessList p =
+generatePokemonWeaknessList :: Pokemon -> String
+generatePokemonWeaknessList p =
   let results = map (\x -> (x, attack x p)) allPokeTypes
       quadruple = filterWeaknessLine Quadruple results
       twice = filterWeaknessLine Twice results
@@ -245,3 +248,56 @@ generateWeaknessList p =
         ++ "\nx1/4: "
         ++ quater
         ++ "\n"
+
+parsePokeType :: String -> PokeType
+parsePokeType = parsePokeTypeLower . map toLower
+
+parsePokeTypeLower :: String -> PokeType
+parsePokeTypeLower "normal" = Normal
+parsePokeTypeLower "nor" = Normal
+parsePokeTypeLower "fire" = Fire
+parsePokeTypeLower "fir" = Fire
+parsePokeTypeLower "water" = Water
+parsePokeTypeLower "wat" = Water
+parsePokeTypeLower "electric" = Electric
+parsePokeTypeLower "ele" = Electric
+parsePokeTypeLower "grass" = Grass
+parsePokeTypeLower "gra" = Grass
+parsePokeTypeLower "ice" = Ice
+parsePokeTypeLower "fighting" = Fighting
+parsePokeTypeLower "fig" = Fighting
+parsePokeTypeLower "poison" = Poison
+parsePokeTypeLower "poi" = Poison
+parsePokeTypeLower "ground" = Ground
+parsePokeTypeLower "gro" = Ground
+parsePokeTypeLower "flying" = Flying
+parsePokeTypeLower "fly" = Flying
+parsePokeTypeLower "psychic" = Psychic
+parsePokeTypeLower "psy" = Psychic
+parsePokeTypeLower "bug" = Bug
+parsePokeTypeLower "rock" = Rock
+parsePokeTypeLower "roc" = Rock
+parsePokeTypeLower "ghost" = Ghost
+parsePokeTypeLower "gho" = Ghost
+parsePokeTypeLower "dragon" = Dragon
+parsePokeTypeLower "dra" = Dragon
+parsePokeTypeLower "dark" = Dark
+parsePokeTypeLower "dar" = Dark
+parsePokeTypeLower "steel" = Steel
+parsePokeTypeLower "ste" = Steel
+parsePokeTypeLower "fairy" = Fairy
+parsePokeTypeLower "fai" = Fairy
+parsePokeTypeLower _ = None
+
+generateWeaknessList :: String -> String
+generateWeaknessList input =
+  let wrds = splitOn "," input
+      t1 = parsePokeType $ head wrds
+      t2 = parsePokeType $ last wrds
+  in case length wrds of
+    2 -> generatePokemonWeaknessList (Pokemon t1 t2)
+    1 -> generatePokemonWeaknessList (Pokemon t1 None)
+    _ -> ""
+  -- in case length wrds of
+  --   2 -> generatePokemonWeaknessList (Pokemon t1 t2)
+  --   _ -> ""
