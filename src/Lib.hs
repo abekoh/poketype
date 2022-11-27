@@ -239,6 +239,7 @@ generatePokemonWeaknessList p =
       twice = filterWeaknessLine Twice results
       half = filterWeaknessLine Half results
       quater = filterWeaknessLine Quater results
+      zero = filterWeaknessLine Zero results
    in "  x4: "
         ++ quadruple
         ++ "\n  x2: "
@@ -247,6 +248,8 @@ generatePokemonWeaknessList p =
         ++ half
         ++ "\nx1/4: "
         ++ quater
+        ++ "\n  x0: "
+        ++ zero
         ++ "\n"
 
 parsePokeType :: String -> PokeType
