@@ -1,6 +1,12 @@
-{-# OPTIONS -Wall -Werror #-}
+module Lib
+    ( generateTypeChart,
+      generateWeaknessList,
+      Pokemon(..),
+      PokeType(..)
+    ) where
 
-import Data.List
+
+import qualified Data.List as List
 
 data PokeType
   = None
@@ -216,7 +222,7 @@ generateTypeChart :: String
 generateTypeChart =
   let effectResults = map (\x -> (x, map (useMove x) allPokeTypes)) allPokeTypes
       header = "    " ++ unwords (map showChartIcon allPokeTypes) ++ "\n"
-      content = intercalate "" (map (\x -> showChartIcon (fst x) ++ " " ++ unwords (map showChartIcon (snd x)) ++ "\n") effectResults)
+      content = List.intercalate "" (map (\x -> showChartIcon (fst x) ++ " " ++ unwords (map showChartIcon (snd x)) ++ "\n") effectResults)
    in header ++ content
 
 filterWeaknessLine :: Result -> [(PokeType, Result)] -> String
@@ -239,21 +245,3 @@ generateWeaknessList p =
         ++ "\nx1/4: "
         ++ quater
         ++ "\n"
-
-main :: IO ()
-main = do
-  print $ useMove Normal Fire
-  print $ useMove Grass Water
-  print $ multiplyResult Twice Half
-  print $ multiplyResult Same Zero
-  print $ attack Fire (Pokemon Fire None)
-  print $ attack Electric (Pokemon Flying Water)
-  print $ attack Dragon (Pokemon Fairy Ghost)
-  print $ attack Normal (Pokemon Fairy Ghost)
-  print $ attack Poison (Pokemon Fairy Ghost)
-  print $ attack Steel (Pokemon Fairy Ghost)
-  print allPokeTypes
-  putStrLn generateTypeChart
-  putStrLn $ generateWeaknessList (Pokemon Fairy Ghost)
-  putStrLn $ generateWeaknessList (Pokemon Grass Dark)
-  putStrLn $ generateWeaknessList (Pokemon Poison Ground)
